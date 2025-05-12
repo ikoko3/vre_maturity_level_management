@@ -14,6 +14,14 @@ const doc = {
       description: 'User-related endpoints',
     },
   ],
+  components: {
+    schemas: {
+        labCreationSchema: {
+          $name: "Dolphin watching Lab",
+          $alias: "DLPH-01"
+        },
+    }
+} 
 };
 
 const outputFile = './src/docs/swagger-output.json';

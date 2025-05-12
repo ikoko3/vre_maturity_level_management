@@ -24,6 +24,16 @@
           "201": {
             "description": "Created"
           }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/labCreationSchema"
+              }
+            }
+          }
         }
       }
     },
@@ -127,6 +137,27 @@
             "description": "Not Found"
           }
         }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "labCreationSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Dolphin watching Lab"
+          },
+          "alias": {
+            "type": "string",
+            "example": "DLPH-01"
+          }
+        },
+        "required": [
+          "name",
+          "alias"
+        ]
       }
     }
   }

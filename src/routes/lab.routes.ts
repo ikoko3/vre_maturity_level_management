@@ -6,28 +6,25 @@ import { CreateLabDto } from '../dtos/lab.dto';
 
 const router = express.Router();
 
-            /**
-            * @openapi
-            *      requestBody:
-            *            description: 'Lab Creation Api'
-            *            schema:
-            *              type: object
-            *              required:
-            *                  - name
-            *                  - alias
-            *              properties:
-            *                  name:
-            *                      type: string
-            *                  alias:
-            *                      type: string
-            **/
-router.post('/register', async ( req, res) => {
-            
-    const dto: CreateLabDto = req.body;
-    const lab = await labService.registerLab(dto);
 
+router.post('/register', async (req, res) => {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/labCreationSchema"
+                    }  
+                }
+            }
+        } 
+    */
+    const dto: CreateLabDto = req.body;
+    
+    const lab = await labService.registerLab(dto);
+  
     res.status(201).json(lab);
-});
+  });
 
 router.post('/config-setup', async ( req, res) => {
 
