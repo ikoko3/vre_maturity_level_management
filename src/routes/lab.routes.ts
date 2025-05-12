@@ -2,7 +2,7 @@ import express from 'express';
 import {Lab} from '../models/lab.model'
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { labService } from '../services/labservice';
-import { CreateLabDto } from '../dtos/lab.dto';
+import { CreateLabDto, LabResponseDto } from '../dtos/lab.dto';
 
 const router = express.Router();
 
@@ -34,6 +34,8 @@ router.post('/config-setup', async ( req, res) => {
 });
 
 
+
+
 router.get('/:id', async (req, res) => {
     let lab = await Lab.findById(req.params['id']).lean();
     if (!lab){
@@ -41,7 +43,7 @@ router.get('/:id', async (req, res) => {
         return;
     }
 
-    res.status(200).json(lab);
+    res.status(200).json(await labService.currentExitConditions(lab));
 })
 
 router.get('/by-alias/:alias', async (req, res) => {
@@ -51,7 +53,7 @@ router.get('/by-alias/:alias', async (req, res) => {
         return;
     }
 
-    res.status(200).json(lab);
+    res.status(200).json(await labService.currentExitConditions(lab));
 })
 
 

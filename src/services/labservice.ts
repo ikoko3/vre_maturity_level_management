@@ -1,15 +1,16 @@
-import {Lab } from '../models/lab.model';
+import {Lab, ILab } from '../models/lab.model';
 import { LevelConfiguration} from '../models/condition_configuration';
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { ConditionCategory, ConditionType} from '../const/condition.const';
 import {v4 as uuidv4} from 'uuid';
-import { CreateLabDto } from '../dtos/lab.dto'
+import { CreateLabDto, LabResponseDto, ExitConditionDto } from '../dtos/lab.dto'
 
 export const labService = {
 
   registerLab: async (data: CreateLabDto) => {
     let levelConfiguration = await LevelConfiguration.findOne({ level: LabLevel.Zero }).lean();
     const exit_conditions = levelConfiguration?.exit_conditions.map(ec => ({
+        _id: uuidv4(),
         is_fullfilled: false, 
         type: ec.type, 
         category: ec.category
@@ -49,7 +50,24 @@ export const labService = {
 
     return config;
   },
-  currentExitConditions: async (data:any) => {
+  currentExitConditions: async (lab: ILab) => {
+    let current_level = lab.levels.sort((a, b) => a.reached_at.getTime() - b.reached_at.getTime())[0] ?? null;
 
+    let lab_dto : LabResponseDto = 
+    {
+      id : lab.id,
+      alias: lab.alias,
+      current_level: current_level.level,
+      name: lab.name,
+      exit_conditions: current_level.exit_conditions.map(ec => ({
+        id: ec._id,
+        is_fullfilled: ec.is_fullfilled,
+        type: ec.type,
+        category: ec.category,
+        comments: ec.comments,
+      })),
+    };
+  
+    return lab_dto;
   }
 };

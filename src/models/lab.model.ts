@@ -6,16 +6,18 @@ export interface ILab extends Document {
   name: string;
   alias: string;
   vre_id: string;
-  levels: {
+  levels: [{
     level: LabLevel,
     state: LabLevelState,
     reached_at: Date,
-    exit_conditions: {
+    exit_conditions: [{
+      _id: string,
       category: number,
       type: number,
-      is_fullfilled: Boolean,
-    }
-  }
+      is_fullfilled: boolean,
+      comments: string,
+    }]
+  }]
 }
 
 //These are only indicative
