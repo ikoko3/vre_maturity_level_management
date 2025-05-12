@@ -138,6 +138,44 @@
           }
         }
       }
+    },
+    "/lab/{id}/exit_condition/{exit_condition_id}/update": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exit_condition_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/conditionUpdateSchema"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -157,6 +195,23 @@
         "required": [
           "name",
           "alias"
+        ]
+      },
+      "conditionUpdateSchema": {
+        "type": "object",
+        "properties": {
+          "is_fullfilled": {
+            "type": "boolean",
+            "example": true
+          },
+          "comments": {
+            "type": "string",
+            "example": ""
+          }
+        },
+        "required": [
+          "is_fullfilled",
+          "comments"
         ]
       }
     }

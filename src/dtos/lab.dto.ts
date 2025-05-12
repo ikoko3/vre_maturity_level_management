@@ -21,4 +21,9 @@ export interface LabResponseDto {
     name: string;
     alias: string;
   }
+
+  export interface ConditionUpdateDto {
+    is_fullfilled: boolean;
+    comments: string;
+  }
   

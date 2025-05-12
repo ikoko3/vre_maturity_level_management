@@ -3,7 +3,7 @@ import { LevelConfiguration} from '../models/condition_configuration';
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { ConditionCategory, ConditionType} from '../const/condition.const';
 import {v4 as uuidv4} from 'uuid';
-import { CreateLabDto, LabResponseDto, ExitConditionDto } from '../dtos/lab.dto'
+import { CreateLabDto, LabResponseDto, ConditionUpdateDto } from '../dtos/lab.dto'
 
 export const labService = {
 
@@ -69,5 +69,29 @@ export const labService = {
     };
   
     return lab_dto;
+  },
+  updateExitCondition: async (lab_id:string ,condition_id:string ,dto: ConditionUpdateDto) => {
+    
+    try{
+
+      const lab = await Lab.findById(lab_id);
+      if (!lab) 
+        return Error('Not found');
+
+      let current_level = lab.levels.sort((a, b) => a.reached_at.getTime() - b.reached_at.getTime())[0] ?? null;
+      let condition = current_level?.exit_conditions.find(ec => ec._id == condition_id);
+      if (!condition)
+        return Error('Not found');
+
+      condition.is_fullfilled = dto.is_fullfilled;
+      condition.comments = dto.comments;
+
+      await lab?.save();
+
+      return condition;
+
+    }catch(e){
+      return {ok: 'den se agapo'};
+    }
   }
 };

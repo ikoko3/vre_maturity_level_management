@@ -20,6 +20,10 @@ const doc = {
           $name: "Dolphin watching Lab",
           $alias: "DLPH-01"
         },
+        conditionUpdateSchema:{
+          $is_fullfilled: true,
+          $comments: ''
+        }
     }
 } 
 };

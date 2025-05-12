@@ -2,7 +2,7 @@ import express from 'express';
 import {Lab} from '../models/lab.model'
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { labService } from '../services/labservice';
-import { CreateLabDto, LabResponseDto } from '../dtos/lab.dto';
+import { ConditionUpdateDto, CreateLabDto, LabResponseDto } from '../dtos/lab.dto';
 
 const router = express.Router();
 
@@ -32,8 +32,6 @@ router.post('/config-setup', async ( req, res) => {
 
     res.status(201).json(config);
 });
-
-
 
 
 router.get('/:id', async (req, res) => {
@@ -76,6 +74,24 @@ router.get('/detailed/by-alias/:alias', async (req, res) => {
     }
 
     res.status(200).json(lab);
+})
+
+router.post('/:id/exit_condition/:exit_condition_id/update', async (req, res) => {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/conditionUpdateSchema"
+                    }  
+                }
+            }
+        } 
+    */
+    const dto: ConditionUpdateDto = req.body;
+    let update_result = await labService.updateExitCondition(req.params['id'], req.params['exit_condition_id'], dto);
+
+    res.status(200).json(update_result);
 })
 
 export default router;
