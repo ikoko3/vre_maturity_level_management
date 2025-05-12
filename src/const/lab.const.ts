@@ -13,3 +13,9 @@ export enum LabLevelState {
     InProgress = 20000,
     Completed = 30000
 }
+
+export enum ConditionType {
+  Undefined = 0,
+  LabLevelProgression = 10,
+  Intermediary = 20,
+}

@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { LabLevel, LabLevelState } from '../const/lab.const';
+import { LabLevel, LabLevelState, ConditionType } from '../const/lab.const';
 
 export interface ILab extends Document {
   name: string;
@@ -16,9 +16,10 @@ export interface ILab extends Document {
 }
 
 //These are only indicative
-const ExitPointSchema: Schema = new Schema({
+const ConditionSchema: Schema = new Schema({
   name: {type: String, required: true},
-  is_fullfilled: {type: Boolean, required: true}
+  is_fullfilled: {type: Boolean, required: true},
+  type: {type: Number, required: true},
 });
 
 const LevelSchema: Schema = new Schema({
@@ -35,7 +36,7 @@ const LevelSchema: Schema = new Schema({
     //default: LabLevelState.Undefined
    },
   reached_at: { type: Date },
-  exit_points: [ExitPointSchema]
+  exit_points: [ConditionSchema]
 });
 
 const LabSchema: Schema = new Schema({
