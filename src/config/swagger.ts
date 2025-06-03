@@ -18,7 +18,8 @@ const doc = {
     schemas: {
         labCreationSchema: {
           $name: "Dolphin watching Lab",
-          $alias: "DLPH-01"
+          $alias: "DLPH-01",
+          $parent_lab_id: "",
         },
         conditionUpdateSchema:{
           $is_fullfilled: true,

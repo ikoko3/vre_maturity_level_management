@@ -190,11 +190,16 @@
           "alias": {
             "type": "string",
             "example": "DLPH-01"
+          },
+          "parent_lab_id": {
+            "type": "string",
+            "example": ""
           }
         },
         "required": [
           "name",
-          "alias"
+          "alias",
+          "parent_lab_id"
         ]
       },
       "conditionUpdateSchema": {

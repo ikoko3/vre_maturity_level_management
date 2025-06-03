@@ -18,7 +18,7 @@ export const labService = {
 
     let lab = new Lab({
         name: data.name,
-        vre_id: uuidv4(),
+        parent_lab_id: data.parent_lab_id,
         alias: data.alias,
         levels: [{
             level: LabLevel.Zero,

@@ -20,6 +20,7 @@ export interface LabResponseDto {
   export interface CreateLabDto {
     name: string;
     alias: string;
+    parent_lab_id: string;
   }
 
   export interface ConditionUpdateDto {

@@ -5,7 +5,7 @@ import { ConditionType } from '../const/condition.const';
 export interface ILab extends Document {
   name: string;
   alias: string;
-  vre_id: string;
+  parent_lab_id: string;
   levels: [{
     level: LabLevel,
     state: LabLevelState,
