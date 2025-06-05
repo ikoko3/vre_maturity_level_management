@@ -17,7 +17,10 @@ export interface ILab extends Document {
       is_fullfilled: boolean,
       comments: string,
     }]
-  }]
+  }],
+  assigned_users: 
+    {user_id: string, role_code: string, assigned_at:Date}[]
+  
 }
 
 //These are only indicative

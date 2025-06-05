@@ -3,7 +3,7 @@ import { LevelConfiguration} from '../models/condition_configuration';
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { ConditionCategory, ConditionType} from '../const/condition.const';
 import {v4 as uuidv4} from 'uuid';
-import { CreateLabDto, LabResponseDto, ConditionUpdateDto } from '../dtos/lab.dto'
+import { CreateLabDto, LabResponseDto, ConditionUpdateDto, AssignUserDto } from '../dtos/lab.dto'
 
 export const labService = {
 
@@ -89,6 +89,28 @@ export const labService = {
       await lab?.save();
 
       return condition;
+
+    }catch(e){
+      return {ok: 'den se agapo'};
+    }
+  },updateUsers: async (lab_id:string, dto:AssignUserDto[] ) => {
+    
+    try{
+
+      const lab = await Lab.findById(lab_id);
+      if (!lab) 
+        return Error('Not found');
+
+      // do not actually replace them all
+      lab.assigned_users = dto.map(d => ({
+        user_id: d.user_id,
+        role_code: d.role_code,
+        assigned_at: new Date(),
+      }));
+
+     await lab.save();
+
+     return lab;
 
     }catch(e){
       return {ok: 'den se agapo'};

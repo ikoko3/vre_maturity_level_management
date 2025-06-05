@@ -177,6 +177,36 @@
         }
       }
     },
+    "/lab/{id}/assign-users": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/labRoleSchema"
+              }
+            }
+          }
+        }
+      }
+    },
     "/role": {
       "post": {
         "description": "",
@@ -397,6 +427,26 @@
         "required": [
           "roles"
         ]
+      },
+      "labRoleSchema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "user_id": {
+              "type": "string",
+              "example": "68417f10dbbf0245911c648c"
+            },
+            "role_code": {
+              "type": "string",
+              "example": "VLD"
+            }
+          },
+          "required": [
+            "user_id",
+            "role_code"
+          ]
+        }
       }
     }
   }

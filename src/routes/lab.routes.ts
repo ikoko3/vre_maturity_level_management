@@ -2,7 +2,7 @@ import express from 'express';
 import {Lab} from '../models/lab.model'
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { labService } from '../services/labservice';
-import { ConditionUpdateDto, CreateLabDto, LabResponseDto } from '../dtos/lab.dto';
+import { AssignUserDto, ConditionUpdateDto, CreateLabDto, LabResponseDto } from '../dtos/lab.dto';
 
 const router = express.Router();
 
@@ -92,6 +92,29 @@ router.post('/:id/exit_condition/:exit_condition_id/update', async (req, res) =>
     let update_result = await labService.updateExitCondition(req.params['id'], req.params['exit_condition_id'], dto);
 
     res.status(200).json(update_result);
+})
+
+router.post('/:id/assign-users', async (req, res) => {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/labRoleSchema"
+                    }  
+                }
+            }
+        } 
+    */
+   try{
+        const dto: AssignUserDto[] = req.body;
+        let update_result = await labService.updateUsers(req.params['id'], dto );
+        
+        res.status(200).json(update_result);
+    } catch (e: unknown) {
+        const error = e instanceof Error ? e : new Error(String(e));
+        res.status(400).json({ error: error.message, stack: error.stack });
+    }
 })
 
 export default router;

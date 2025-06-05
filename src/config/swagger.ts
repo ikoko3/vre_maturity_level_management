@@ -39,7 +39,11 @@ const doc = {
         },
         userRolesSchema:{
           $roles: "['VLD']",
-        }
+        },
+        labRoleSchema: [{
+          $user_id: "68417f10dbbf0245911c648c",
+          $role_code: "VLD",
+        }]
     }
 } 
 };

@@ -28,3 +28,7 @@ export interface LabResponseDto {
     comments: string;
   }
   
+  export interface AssignUserDto{
+      user_id: string;
+      role_code: string;
+  }
