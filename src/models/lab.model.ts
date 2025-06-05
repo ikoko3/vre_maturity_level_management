@@ -46,11 +46,19 @@ const LevelSchema: Schema = new Schema({
   exit_conditions: [ConditionSchema]
 });
 
+const AssignedUserSchema = new Schema({
+  user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  role_code: { type: String, ref: 'RoleDefinition', required: true },
+  assigned_at: { type: Date, default: Date.now }
+});
+
+
 const LabSchema: Schema = new Schema({
   name: { type: String, required: true },
   alias: {type: String, required: true, unique: true},
-  vre_id: { type: String, required: true, unique: true },
-  levels: [LevelSchema]
+  parent_lab_id: { type: String },
+  levels: [LevelSchema],
+  assigned_users: [AssignedUserSchema],
 });
 
 export const Lab = mongoose.model<ILab>('Lab', LabSchema);

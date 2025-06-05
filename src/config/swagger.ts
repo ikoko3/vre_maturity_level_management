@@ -24,6 +24,21 @@ const doc = {
         conditionUpdateSchema:{
           $is_fullfilled: true,
           $comments: ''
+        },
+        roleSchema: {
+          $code: "VLD",
+          $name: "Virtual Lab Developer",
+          $description: "Develops Virtual Labs",
+          $is_global: false,
+        },
+        userSchema:{
+          $reference_id: "12345",
+          $email: "test@test.nl",
+          $name: "Joe Doe",
+          $global_roles: "['VLD']",
+        },
+        userRolesSchema:{
+          $roles: "['VLD']",
         }
     }
 } 

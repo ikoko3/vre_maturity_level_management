@@ -176,6 +176,119 @@
           }
         }
       }
+    },
+    "/role": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/roleSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/role/{code}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/roleSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}/roles": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userRolesSchema"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -217,6 +330,72 @@
         "required": [
           "is_fullfilled",
           "comments"
+        ]
+      },
+      "roleSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "VLD"
+          },
+          "name": {
+            "type": "string",
+            "example": "Virtual Lab Developer"
+          },
+          "description": {
+            "type": "string",
+            "example": "Develops Virtual Labs"
+          },
+          "is_global": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "description",
+          "is_global"
+        ]
+      },
+      "userSchema": {
+        "type": "object",
+        "properties": {
+          "reference_id": {
+            "type": "string",
+            "example": "12345"
+          },
+          "email": {
+            "type": "string",
+            "example": "test@test.nl"
+          },
+          "name": {
+            "type": "string",
+            "example": "Joe Doe"
+          },
+          "global_roles": {
+            "type": "string",
+            "example": "['VLD']"
+          }
+        },
+        "required": [
+          "reference_id",
+          "email",
+          "name",
+          "global_roles"
+        ]
+      },
+      "userRolesSchema": {
+        "type": "object",
+        "properties": {
+          "roles": {
+            "type": "string",
+            "example": "['VLD']"
+          }
+        },
+        "required": [
+          "roles"
         ]
       }
     }
