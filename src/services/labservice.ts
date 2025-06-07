@@ -10,7 +10,7 @@ export const labService = {
   registerLab: async (data: CreateLabDto) => {
     let levelConfiguration = await LevelConfiguration.findOne({ level: LabLevel.Zero }).lean();
     const exit_conditions = levelConfiguration?.exit_conditions.map(ec => ({
-        _id: uuidv4(),
+        //_id: uuidv4(),
         is_fullfilled: false, 
         type: ec.type, 
         category: ec.category
@@ -59,6 +59,7 @@ export const labService = {
       alias: lab.alias,
       current_level: current_level.level,
       name: lab.name,
+      assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_code: au.role_code})),
       exit_conditions: current_level.exit_conditions.map(ec => ({
         id: ec._id,
         is_fullfilled: ec.is_fullfilled,

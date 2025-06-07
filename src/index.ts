@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import mongoose from 'mongoose';
 import { config } from './config/config';
 import lab_router from './routes/lab.routes';
@@ -9,6 +10,12 @@ import swaggerFile from './docs/swagger-output.json';
 
 const app = express();
 const PORT = 3000;
+
+app.use(cors());
+// app.use(cors({
+//   origin: 'http://localhost:4000', // Move this to parameters
+//   credentials: true, // if you're sending cookies or auth headers
+// }));
 
 app.use(express.json());
 app.use('/lab', lab_router);

@@ -15,6 +15,7 @@ export interface LabResponseDto {
     alias: string;
     current_level: LabLevel;
     exit_conditions: ExitConditionDto[];
+    assigned_users: AssignUserDto[];
   }
   
   export interface CreateLabDto {
