@@ -1,4 +1,21 @@
 
+//TODO: These should be refined and be categorized
+export enum ConditionStatus {
+    Unknown = 0,
+
+    //Development
+    InProgress = 100,
+    Blocked = 101,
+    
+    //Evaluation
+    RequestedEvaluation = 200,
+    UnderEvalutaion = 201,
+
+    //Final status
+    Verified = 300,
+}
+
+
 //This is a broad categorization enum to specify 
 export enum ConditionCategory {
     Undefined = 0,

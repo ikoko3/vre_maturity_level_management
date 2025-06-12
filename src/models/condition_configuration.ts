@@ -7,6 +7,7 @@ export interface ILevelConfiguration extends Document {
   exit_conditions: [{
     category: Number;
     type: Number;
+    tooltip_url: String;
   }]
 }
 
@@ -14,6 +15,7 @@ export interface ILevelConfiguration extends Document {
 const ExitConditionSchema: Schema = new Schema({
   category: {type: Number, required: true},
   type: {type: Number, required: true},
+  tooltip_url: {type: String, required: true},
 });
 
 const LevelConfigurationSchema: Schema = new Schema({

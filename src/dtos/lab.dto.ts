@@ -6,7 +6,9 @@ export interface ExitConditionDto{
   category: ConditionCategory;
   type: ConditionType;
   comments: string;
-  is_fullfilled: boolean;
+  status: number;
+  discussion_url: string;
+  tooltip_url: string;
 }
 
 export interface LabResponseDto {
@@ -25,8 +27,9 @@ export interface LabResponseDto {
   }
 
   export interface ConditionUpdateDto {
-    is_fullfilled: boolean;
+    status: number;
     comments: string;
+    discussion_url: string;
   }
   
   export interface AssignUserDto{

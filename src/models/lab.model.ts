@@ -14,8 +14,10 @@ export interface ILab extends Document {
       _id: string,
       category: number,
       type: number,
-      is_fullfilled: boolean,
+      status: number,
+      discussion_url: string,
       comments: string,
+      tooltip_url: string,
     }]
   }],
   assigned_users: 
@@ -25,10 +27,12 @@ export interface ILab extends Document {
 
 //These are only indicative
 const ConditionSchema: Schema = new Schema({
-  is_fullfilled: {type: Boolean, required: true},
   category: {type: Number, required: true},
   type: {type: Number, required: true},
+  status: {type: Number, required: true},
   comments: {type: String},
+  tooltip_url: {type: String},
+  discussion_url: {type: String},
 });
 
 //TODO: Figure out how to fix the validation errors

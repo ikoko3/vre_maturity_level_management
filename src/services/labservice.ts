@@ -1,7 +1,7 @@
 import {Lab, ILab } from '../models/lab.model';
 import { LevelConfiguration} from '../models/condition_configuration';
 import { LabLevel, LabLevelState } from '../const/lab.const';
-import { ConditionCategory, ConditionType} from '../const/condition.const';
+import { ConditionCategory, ConditionType, ConditionStatus} from '../const/condition.const';
 import {v4 as uuidv4} from 'uuid';
 import { CreateLabDto, LabResponseDto, ConditionUpdateDto, AssignUserDto } from '../dtos/lab.dto'
 
@@ -11,9 +11,10 @@ export const labService = {
     let levelConfiguration = await LevelConfiguration.findOne({ level: LabLevel.Zero }).lean();
     const exit_conditions = levelConfiguration?.exit_conditions.map(ec => ({
         //_id: uuidv4(),
-        is_fullfilled: false, 
         type: ec.type, 
-        category: ec.category
+        status: ConditionStatus.Unknown,
+        category: ec.category,
+        tooltip_url: ec.tooltip_url,
       }));
 
     let lab = new Lab({
@@ -37,12 +38,12 @@ export const labService = {
     var config = new LevelConfiguration({
         level: LabLevel.Zero,
         exit_conditions: [
-            {category: ConditionCategory.LabLevelProgression, type: ConditionType.PlanFeasibility },
-            {category: ConditionCategory.LabLevelProgression, type: ConditionType.DevelopmentTimeline },
-            {category: ConditionCategory.LabLevelProgression, type: ConditionType.CodeBase },
-            {category: ConditionCategory.LabLevelProgression, type: ConditionType.TokenDiscretion },
-            {category: ConditionCategory.LabLevelProgression, type: ConditionType.LicenseExistence },
-            {category: ConditionCategory.LabLevelProgression, type: ConditionType.DescriptiveName },
+            {category: ConditionCategory.LabLevelProgression, type: ConditionType.PlanFeasibility, tooltip_url: "https://naavre.net/docs/readiness_levels/development_plan/" },
+            {category: ConditionCategory.LabLevelProgression, type: ConditionType.DevelopmentTimeline, tooltip_url: "https://naavre.net/docs/readiness_levels/L0_initial_proposal/" },
+            {category: ConditionCategory.LabLevelProgression, type: ConditionType.CodeBase, tooltip_url: "https://naavre.net/docs/readiness_levels/L0_initial_proposal/" },
+            {category: ConditionCategory.LabLevelProgression, type: ConditionType.TokenDiscretion, tooltip_url: "https://naavre.net/docs/readiness_levels/L0_initial_proposal/" },
+            {category: ConditionCategory.LabLevelProgression, type: ConditionType.LicenseExistence, tooltip_url: "https://naavre.net/docs/readiness_levels/L0_initial_proposal/" },
+            {category: ConditionCategory.LabLevelProgression, type: ConditionType.DescriptiveName, tooltip_url: "https://naavre.net/docs/readiness_levels/L0_initial_proposal/" },
         ]
     });
 
@@ -62,10 +63,12 @@ export const labService = {
       assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_code: au.role_code})),
       exit_conditions: current_level.exit_conditions.map(ec => ({
         id: ec._id,
-        is_fullfilled: ec.is_fullfilled,
+        status: ec.status,
+        discussion_url: ec.discussion_url,
         type: ec.type,
         category: ec.category,
         comments: ec.comments,
+        tooltip_url: ec.tooltip_url,
       })),
     };
   
@@ -84,8 +87,9 @@ export const labService = {
       if (!condition)
         return Error('Not found');
 
-      condition.is_fullfilled = dto.is_fullfilled;
+      condition.status = dto.status;
       condition.comments = dto.comments;
+      condition.discussion_url = dto.discussion_url;
 
       await lab?.save();
 
