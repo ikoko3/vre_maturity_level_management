@@ -7,6 +7,9 @@ import userRole_router from './routes/userRoles.routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerFile from './docs/swagger-output.json';
 
+import taskDefinitionRoutes from './auto_assess/routes/taskDefinition.routes';
+
+
 
 const app = express();
 const PORT = 3000;
@@ -20,6 +23,9 @@ app.use(cors());
 app.use(express.json());
 app.use('/lab', lab_router);
 app.use(userRole_router);
+
+app.use('/api/task-definitions', taskDefinitionRoutes);
+
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 

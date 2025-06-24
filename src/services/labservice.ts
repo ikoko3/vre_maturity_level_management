@@ -87,8 +87,11 @@ export const labService = {
       if (!condition)
         return Error('Not found');
 
-      condition.status = dto.status;
+      if (dto?.status)
+        condition.status = dto.status;
+      if (dto?.comments)
       condition.comments = dto.comments;
+      if (dto?.discussion_url)
       condition.discussion_url = dto.discussion_url;
 
       await lab?.save();
