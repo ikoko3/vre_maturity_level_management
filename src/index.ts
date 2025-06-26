@@ -1,11 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import session from 'express-session';
+import { keycloak, memoryStore } from './config/keycloak';
 import { config } from './config/config';
 import lab_router from './routes/lab.routes';
 import userRole_router from './routes/userRoles.routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerFile from './docs/swagger-output.json';
+
 
 import taskDefinitionRoutes from './auto_assess/routes/taskDefinition.routes';
 
@@ -15,19 +18,30 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors());
-// app.use(cors({
-//   origin: 'http://localhost:4000', // Move this to parameters
-//   credentials: true, // if you're sending cookies or auth headers
-// }));
+app.use(
+  session({
+    secret: 'some-secret',
+    resave: false,
+    saveUninitialized: true,
+    store: memoryStore,
+  })
+);
+
+app.use(keycloak.middleware());
 
 app.use(express.json());
 app.use('/lab', lab_router);
 app.use(userRole_router);
 
+
+
 app.use('/api/task-definitions', taskDefinitionRoutes);
-
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+
+// app.get('/admin', keycloak.protect('realm:admin'), (req, res) => {
+//   res.send('Admin only');
+// });
+
 
 mongoose.connect(config.mongoUri)
   .then(() => console.log(`Connected to MongoDB [${config.nodeEnv}]`))

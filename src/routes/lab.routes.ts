@@ -3,6 +3,8 @@ import {Lab} from '../models/lab.model'
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { labService } from '../services/labservice';
 import { AssignUserDto, ConditionUpdateDto, CreateLabDto, LabResponseDto } from '../dtos/lab.dto';
+import { authenticate } from '../middleware/authMiddleware';
+
 
 const router = express.Router();
 
@@ -34,7 +36,10 @@ router.post('/config-setup', async ( req, res) => {
 });
 
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticate, async (req, res) => {
+     //const user = req.kauth.grant.access_token.content;
+    //console.log("User info:", user);
+
     let lab = await Lab.findById(req.params['id']).lean();
     if (!lab){
         res.status(404).json({ message: "Lab not found" });
