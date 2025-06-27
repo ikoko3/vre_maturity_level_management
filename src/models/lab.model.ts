@@ -65,7 +65,7 @@ const LabSchema: Schema = new Schema({
   name: { type: String, required: true },
   alias: {type: String, required: true, unique: true},
   parent_lab_id: { type: String },
-  current_levl : { type: Number, required: true},
+  current_level : { type: Number, required: true},
   levels: [LevelSchema],
   assigned_users: [AssignedUserSchema],
 });

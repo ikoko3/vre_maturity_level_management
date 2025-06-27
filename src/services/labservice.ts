@@ -57,7 +57,7 @@ export const labService = {
 
     let lab_dto : LabResponseDto = 
     {
-      id : lab.id,
+      id : lab._id,
       alias: lab.alias,
       current_level: current_level.level,
       name: lab.name,
