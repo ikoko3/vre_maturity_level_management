@@ -1,12 +1,14 @@
 {
   "name": "vre_levels",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "swagger": "ts-node src/config/swagger.ts",
+    "swagger": "node --loader ts-node/esm src/config/swagger.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node src/index.ts",
-    "dev": "nodemon src/index.ts"
+    "dev": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +37,7 @@
     "nodemon": "^3.1.9",
     "swagger-autogen": "^2.23.7",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }

@@ -24,6 +24,12 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
     // Attach user info for later use
     (req as any).user = payload;
 
+    const roles = (req as any).user?.resource_access?.['nextjs-frontend']?.roles || [];
+    if (roles.includes('coordinator')) {
+    // show or allow coordinator actions
+    }
+
+
     next();
   } catch (err) {
     console.error('JWT validation failed:', err);

@@ -21,6 +21,7 @@ export const labService = {
         name: data.name,
         parent_lab_id: data.parent_lab_id,
         alias: data.alias,
+        current_level: LabLevel.Zero,
         levels: [{
             level: LabLevel.Zero,
             state: LabLevelState.InProgress,

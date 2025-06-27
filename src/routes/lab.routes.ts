@@ -35,6 +35,17 @@ router.post('/config-setup', async ( req, res) => {
     res.status(201).json(config);
 });
 
+router.get('/list', async (req, res) => {
+    const labs = (await Lab.find({}, 'name description current_level alias').lean()).map(lab => ({
+            id: lab._id.toString(),
+            name: lab.name,
+            alias: lab.alias,
+            level: lab.current_level
+        }));
+
+
+    res.status(200).json(labs);
+})
 
 router.get('/:id', authenticate, async (req, res) => {
      //const user = req.kauth.grant.access_token.content;

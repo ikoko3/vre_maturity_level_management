@@ -6,6 +6,7 @@ export interface ILab extends Document {
   name: string;
   alias: string;
   parent_lab_id: string;
+  current_level: LabLevel;
   levels: [{
     level: LabLevel,
     state: LabLevelState,
@@ -64,6 +65,7 @@ const LabSchema: Schema = new Schema({
   name: { type: String, required: true },
   alias: {type: String, required: true, unique: true},
   parent_lab_id: { type: String },
+  current_levl : { type: Number, required: true},
   levels: [LevelSchema],
   assigned_users: [AssignedUserSchema],
 });
