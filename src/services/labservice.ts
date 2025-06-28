@@ -61,7 +61,7 @@ export const labService = {
       alias: lab.alias,
       current_level: current_level.level,
       name: lab.name,
-      assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_code: au.role_code})),
+      assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_code: au.role_code, assigned_at: au.assigned_at})),
       exit_conditions: current_level.exit_conditions.map(ec => ({
         id: ec._id,
         status: ec.status,
