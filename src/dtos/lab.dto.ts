@@ -32,7 +32,10 @@ export interface LabResponseDto {
     discussion_url: string;
   }
   
-  export interface AssignUserDto{
+  export interface AssignedUserDto{
       user_id: string;
-      role_code: string;
+      role_codes: [string];
+      email: string;
+      name: string;
+      reference_id: string;
   }

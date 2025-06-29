@@ -2,7 +2,7 @@ import express from 'express';
 import {Lab} from '../models/lab.model'
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { labService } from '../services/labservice';
-import { AssignUserDto, ConditionUpdateDto, CreateLabDto, LabResponseDto } from '../dtos/lab.dto';
+import { AssignedUserDto, ConditionUpdateDto, CreateLabDto, LabResponseDto } from '../dtos/lab.dto';
 import { authenticate } from '../middleware/authMiddleware';
 
 
@@ -111,6 +111,7 @@ router.post('/:id/exit_condition/:exit_condition_id/update', async (req, res) =>
     res.status(200).json(update_result);
 })
 
+
 router.post('/:id/assign-users', async (req, res) => {
     /*  #swagger.requestBody = {
             required: true,
@@ -124,7 +125,7 @@ router.post('/:id/assign-users', async (req, res) => {
         } 
     */
    try{
-        const dto: AssignUserDto[] = req.body;
+        const dto: AssignedUserDto[] = req.body;
         let update_result = await labService.updateUsers(req.params['id'], dto );
         
         res.status(200).json(update_result);

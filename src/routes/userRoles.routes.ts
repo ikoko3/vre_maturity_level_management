@@ -66,6 +66,18 @@ router.post('/users', async (req, res) => {
     res.status(201).json(user);
 });
 
+router.get('/users', async (req, res) => {
+    try {
+        var users = await userService.getUsers();
+
+        res.status(200).json(users);
+    }catch (e: unknown){
+        const error = e instanceof Error ? e : new Error(String(e));
+        res.status(500).json({ error: error.message, stack: error.stack });
+    }
+})
+
+
 router.post('/users/:id/roles', async (req, res) => {
 /*  #swagger.requestBody = {
             required: true,

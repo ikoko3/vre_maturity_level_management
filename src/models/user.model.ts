@@ -2,11 +2,15 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IUser extends Document {
   reference_id: string;
+  name: string;
+  email: string;
   global_roles: string[];
 }
 
 const UserSchema: Schema = new Schema({
   reference_id: { type: String, required: true, unique: true },
+  name: {type: String},
+  email: {type: String},
   global_roles: [{ type: String, ref: 'RoleDefinition' }]
 });
 

@@ -20,6 +20,11 @@ export const userService = {
 
       return roles;
   },
+  getUsers: async () => {
+      const users = (await User.find().lean());
+
+      return users;
+  },
    addUser: async (data: UserDto) => {
     const user = new User({
       reference_id: data.reference_id,

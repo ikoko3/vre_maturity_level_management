@@ -1,9 +1,10 @@
 import {Lab, ILab } from '../models/lab.model';
+import {User} from '../models/user.model';
 import { LevelConfiguration} from '../models/condition_configuration';
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { ConditionCategory, ConditionType, ConditionStatus} from '../const/condition.const';
 import {v4 as uuidv4} from 'uuid';
-import { CreateLabDto, LabResponseDto, ConditionUpdateDto, AssignUserDto } from '../dtos/lab.dto'
+import { CreateLabDto, LabResponseDto, ConditionUpdateDto, AssignedUserDto } from '../dtos/lab.dto'
 
 export const labService = {
 
@@ -61,7 +62,7 @@ export const labService = {
       alias: lab.alias,
       current_level: current_level.level,
       name: lab.name,
-      assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_code: au.role_code, assigned_at: au.assigned_at})),
+      assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_codes: au.role_codes, assigned_at: au.assigned_at, name: au.name, email: au.email, reference_id: au.reference_id})),
       exit_conditions: current_level.exit_conditions.map(ec => ({
         id: ec._id,
         status: ec.status,
@@ -102,27 +103,52 @@ export const labService = {
     }catch(e){
       return {ok: 'den se agapo'};
     }
-  },updateUsers: async (lab_id:string, dto:AssignUserDto[] ) => {
-    
-    try{
+  },updateUsers: async (lab_id: string, dto: AssignedUserDto[]) => {
+  try {
+    const lab = await Lab.findById(lab_id);
+    if (!lab) return new Error('Not found');
 
-      const lab = await Lab.findById(lab_id);
-      if (!lab) 
-        return Error('Not found');
+    for (const d of dto) {
+      // Ensure incoming role codes are unique
+      const incomingRoles = Array.from(new Set(d.role_codes || []));
 
-      // do not actually replace them all
-      lab.assigned_users = dto.map(d => ({
-        user_id: d.user_id,
-        role_code: d.role_code,
-        assigned_at: new Date(),
-      }));
+      // Try to find existing user
+      const existingUser = lab.assigned_users.find(u => u.user_id === d.user_id);
 
-     await lab.save();
+      if (existingUser) {
+        // Merge unique role codes
+        const roleSet = new Set([
+          ...(existingUser.role_codes || []),
+          ...incomingRoles,
+        ]);
+        existingUser.role_codes = Array.from(roleSet);
 
-     return lab;
+        // Optional: ensure name and email are updated if needed
+        existingUser.name = d.name;
+        existingUser.email = d.email;
 
-    }catch(e){
-      return {ok: 'den se agapo'};
+        // Let Mongoose know this array has changed
+        lab.markModified('assigned_users');
+      } else {
+        // Add new user entry
+        lab.assigned_users.push({
+          user_id: d.user_id,
+          name: d.name,
+          email: d.email,
+          role_codes: incomingRoles,
+          assigned_at: new Date(),
+          reference_id: d.reference_id,
+        });
+      }
     }
+
+    await lab.save();
+    return lab;
+
+  } catch (e) {
+    console.error('Error updating lab users:', e);
+    return { ok: 'den se agapo' };
   }
+}
+
 };

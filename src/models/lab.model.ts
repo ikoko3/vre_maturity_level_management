@@ -22,7 +22,7 @@ export interface ILab extends Document {
     }]
   }],
   assigned_users: 
-    {user_id: string, role_code: string, assigned_at:Date}[]
+    {user_id: string, name: string, email: string, role_codes: string[], assigned_at:Date, reference_id: string}[]
   
 }
 
@@ -56,8 +56,11 @@ const LevelSchema: Schema = new Schema({
 
 const AssignedUserSchema = new Schema({
   user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  role_code: { type: String, ref: 'RoleDefinition', required: true },
-  assigned_at: { type: Date, default: Date.now }
+  role_codes: [{ type: String, ref: 'RoleDefinition', required: true }],
+  assigned_at: { type: Date, default: Date.now },
+  name: {type: String},
+  email: {type: String},
+  reference_id: {type: String, required: true}
 });
 
 
