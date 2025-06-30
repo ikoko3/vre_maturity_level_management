@@ -125,6 +125,10 @@ router.post('/:id/update_level', async (req, res) => {
     */
     const dto: LevelUpdateDto = req.body;
     let update_result = await labService.updateLevelState(req.params['id'], dto);
+    if (update_result instanceof Error){
+        res.status(400).json({error: update_result.message});
+        return;
+    }
 
     res.status(200).json(update_result);
 })

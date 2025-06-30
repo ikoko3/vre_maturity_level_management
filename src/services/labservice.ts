@@ -1,9 +1,7 @@
 import {Lab, ILab } from '../models/lab.model';
-import {User} from '../models/user.model';
 import { LevelConfiguration} from '../models/condition_configuration';
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { ConditionCategory, ConditionType, ConditionStatus} from '../const/condition.const';
-import {v4 as uuidv4} from 'uuid';
 import { CreateLabDto, LabResponseDto, ConditionUpdateDto, AssignedUserDto, LevelUpdateDto } from '../dtos/lab.dto'
 
 export const labService = {
@@ -11,7 +9,6 @@ export const labService = {
   registerLab: async (data: CreateLabDto) => {
     let levelConfiguration = await LevelConfiguration.findOne({ level: LabLevel.Zero }).lean();
     const exit_conditions = levelConfiguration?.exit_conditions.map(ec => ({
-        //_id: uuidv4(),
         type: ec.type, 
         status: ConditionStatus.Unknown,
         category: ec.category,
@@ -37,7 +34,7 @@ export const labService = {
   },
   //This is hardcoded to test faster, at a later phase it can be removed and maintained only via the db
   registerConfiguration: async (data: any) => {
-    var config = new LevelConfiguration({
+    var config_l0 = new LevelConfiguration({
         level: LabLevel.Zero,
         exit_conditions: [
             {category: ConditionCategory.LabLevelProgression, type: ConditionType.PlanFeasibility, tooltip_url: "https://naavre.net/docs/readiness_levels/development_plan/" },
@@ -46,15 +43,45 @@ export const labService = {
             {category: ConditionCategory.LabLevelProgression, type: ConditionType.TokenDiscretion, tooltip_url: "https://naavre.net/docs/readiness_levels/L0_initial_proposal/" },
             {category: ConditionCategory.LabLevelProgression, type: ConditionType.LicenseExistence, tooltip_url: "https://naavre.net/docs/readiness_levels/L0_initial_proposal/" },
             {category: ConditionCategory.LabLevelProgression, type: ConditionType.DescriptiveName, tooltip_url: "https://naavre.net/docs/readiness_levels/L0_initial_proposal/" },
-        ]
+          ]
     });
+    await config_l0.save();
 
-    await config.save();
+    var config_l1 = new LevelConfiguration({
+      level: LabLevel.One,
+      exit_conditions: [
+        { category: ConditionCategory.Intermediary, type: ConditionType.DocumentationMetadata, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#documentation" },
+        { category: ConditionCategory.Intermediary, type: ConditionType.DocumentationMetadataVersionControl, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#documentation" },
 
-    return config;
+        { category: ConditionCategory.Intermediary, type: ConditionType.PersonalTokens, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#security" },
+
+        { category: ConditionCategory.Intermediary, type: ConditionType.VersionsPinned, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#versioning" },
+
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.DataReadiness, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#data" },
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.ExternalDataCatalogue, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#data" },
+
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.NoErrors, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#codebase" },
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.CodeResponsibility, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#codebase" },
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.CodingStyleGuide, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#codebase" },
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.Parallelization, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#codebase" },
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.MissingDataErrorHandling, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#codebase" },
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.ExternalToolLabeling, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#codebase" },
+
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.ContainerizedCells, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#containerization" },
+
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.BenchmarkResources, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#infrastructure" },
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.ResourceAvailability, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#infrastructure" },
+
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.ContainerExecution, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#workflow-execution" },
+        { category: ConditionCategory.LabLevelProgression, type: ConditionType.LabDemonstrationPossible, tooltip_url: "https://naavre.net/docs/readiness_levels/L1_co-development/#workflow-execution" },
+      ]
+      }
+    );
+    await config_l1.save();
+
   },
   currentExitConditions: async (lab: ILab) => {
-    let current_level = lab.levels.sort((a, b) => a.reached_at.getTime() - b.reached_at.getTime())[0] ?? null;
+    let current_level = lab.levels.sort((a, b) => b.reached_at.getTime() - a.reached_at.getTime())[0] ?? null;
 
     let lab_dto : LabResponseDto = 
     {
@@ -77,7 +104,7 @@ export const labService = {
   
     return lab_dto;
   },
-  updateExitCondition: async (lab_id:string ,condition_id:string ,dto: ConditionUpdateDto) => {
+  updateExitCondition: async (lab_id:string, condition_id:string ,dto: ConditionUpdateDto) => {
     
     try{
 
@@ -85,7 +112,7 @@ export const labService = {
       if (!lab) 
         return Error('Not found');
 
-      let current_level = lab.levels.sort((a, b) => a.reached_at.getTime() - b.reached_at.getTime())[0] ?? null;
+      let current_level = lab.levels.sort((a, b) => b.reached_at.getTime() - a.reached_at.getTime())[0] ?? null;
       let condition = current_level?.exit_conditions.find(ec => ec._id == condition_id);
       if (!condition)
         return Error('Not found');
@@ -113,11 +140,17 @@ export const labService = {
         return Error('Not found');
 
       let level_to_update = lab.levels.find(l => l.level == dto.level);
-      if (!level_to_update){
-          return {error: 'Lab Level not found'}
-      }
-
+      if (!level_to_update)
+        return Error('Lab Level not found');
+        
       level_to_update.state = dto.state;
+
+      //Check level update special cases
+      if (dto.state == LabLevelState.Completed){
+        var upgrade_result = await progressLevel(lab_id);
+        if (upgrade_result instanceof Error)
+          return Error('All Exit Conditions need to be Verified');
+      }
 
       await lab?.save();
 
@@ -174,3 +207,47 @@ export const labService = {
 }
 
 };
+
+async function progressLevel(lab_id:string ) {
+    try{
+      const lab = await Lab.findById(lab_id);
+      if (!lab) 
+        return Error('Not found');
+
+      let current_level = lab.levels.sort((a, b) => a.reached_at.getTime() - b.reached_at.getTime())[0] ?? null;
+      if (current_level.level == LabLevel.Four)
+          return;
+
+      var exit_conditions_not_ready = current_level.exit_conditions.some(ec => ec.status != ConditionStatus.Verified);
+      if (exit_conditions_not_ready)
+        return Error('Exit Conditions have to be verified');
+
+      let next_level = (current_level.level + 1) as LabLevel;
+      let levelConfiguration = await LevelConfiguration.findOne({ level: next_level}).lean();
+      const exit_conditions = (levelConfiguration?.exit_conditions || []).map(ec => ({
+          type: ec.type, 
+          status: ConditionStatus.Unknown,
+          category: ec.category,
+          tooltip_url: ec.tooltip_url,
+        }));
+
+        lab.levels.push({
+            level: next_level,
+            state: LabLevelState.InDevelopment,
+            reached_at: new Date(),
+            exit_conditions: exit_conditions as [{
+              _id: string;
+              category: number;
+              type: number;
+              status: number;
+              discussion_url: string;
+              comments: string;
+              tooltip_url: string;
+            }],
+        });
+
+        lab.save();
+    }catch(e){
+      return {ok: 'den se agapo'};
+    }
+  };

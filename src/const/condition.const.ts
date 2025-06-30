@@ -40,6 +40,30 @@ export enum ConditionType {
     DescriptiveName = 1005,
 
     // Level 1 - 11XX
+    DocumentationMetadata = 1100,                   // Metadata is available outside the virtual lab
+    DocumentationMetadataVersionControl = 1101,     // Metadata is tracked via version control
+
+    PersonalTokens = 1102,                           // Personal tokens are not tracked in version control
+
+    VersionsPinned = 1103,                           // Software/library versions are pinned
+
+    DataReadiness = 1104,                            // Data is ready for scientific experiments
+    ExternalDataCatalogue = 1105,                    // Read-only data is stored in an external catalogue
+
+    NoErrors = 1106,                                 // Code executes without errors (fresh machine test)
+    CodeResponsibility = 1107,                       // Each notebook cell has clear responsibility
+    CodingStyleGuide = 1108,                         // Coding style follows a standard (e.g., PEP 8)
+    Parallelization = 1109,                          // Parallel processing used where appropriate
+    MissingDataErrorHandling = 1110,                 // Clear errors when expected files/objects are missing
+    ExternalToolLabeling = 1111,                     // CLI/external tools are clearly labeled
+
+    ContainerizedCells = 1112,                       // Notebook cells can be containerized
+
+    BenchmarkResources = 1113,                       // Benchmark conducted for storage/computing needs
+    ResourceAvailability = 1114,                     // Required compute/storage are arranged
+
+    ContainerExecution = 1115,                       // Containerized cells run without modification
+    LabDemonstrationPossible = 1116,                 // Demonstration of lab is feasible
 
     // Level 2 - 12XX
 
