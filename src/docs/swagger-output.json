@@ -197,6 +197,36 @@
         }
       }
     },
+    "/lab/{id}/update_level": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/conditionUpdateSchema"
+              }
+            }
+          }
+        }
+      }
+    },
     "/lab/{id}/assign-users": {
       "post": {
         "description": "",
@@ -458,18 +488,40 @@
       "conditionUpdateSchema": {
         "type": "object",
         "properties": {
-          "is_fullfilled": {
-            "type": "boolean",
-            "example": true
+          "status": {
+            "type": "number",
+            "example": 100
           },
           "comments": {
             "type": "string",
             "example": ""
+          },
+          "discussion_url": {
+            "type": "string",
+            "example": "http://google.com"
           }
         },
         "required": [
-          "is_fullfilled",
-          "comments"
+          "status",
+          "comments",
+          "discussion_url"
+        ]
+      },
+      "levelStatusUpdateSchema": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number",
+            "example": 0
+          },
+          "state": {
+            "type": "number",
+            "example": 200
+          }
+        },
+        "required": [
+          "level",
+          "state"
         ]
       },
       "roleSchema": {
@@ -547,14 +599,14 @@
               "type": "string",
               "example": "68417f10dbbf0245911c648c"
             },
-            "role_code": {
+            "role_codes": {
               "type": "string",
-              "example": "VLD"
+              "example": "[VLD]"
             }
           },
           "required": [
             "user_id",
-            "role_code"
+            "role_codes"
           ]
         }
       }

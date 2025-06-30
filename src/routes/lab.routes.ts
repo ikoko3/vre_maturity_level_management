@@ -2,7 +2,7 @@ import express from 'express';
 import {Lab} from '../models/lab.model'
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { labService } from '../services/labservice';
-import { AssignedUserDto, ConditionUpdateDto, CreateLabDto, LabResponseDto } from '../dtos/lab.dto';
+import { AssignedUserDto, ConditionUpdateDto, CreateLabDto, LabResponseDto, LevelUpdateDto } from '../dtos/lab.dto';
 import { authenticate } from '../middleware/authMiddleware';
 
 
@@ -107,6 +107,24 @@ router.post('/:id/exit_condition/:exit_condition_id/update', async (req, res) =>
     */
     const dto: ConditionUpdateDto = req.body;
     let update_result = await labService.updateExitCondition(req.params['id'], req.params['exit_condition_id'], dto);
+
+    res.status(200).json(update_result);
+})
+
+router.post('/:id/update_level', async (req, res) => {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/levelStatusUpdateSchema"
+                    }  
+                }
+            }
+        } 
+    */
+    const dto: LevelUpdateDto = req.body;
+    let update_result = await labService.updateLevelState(req.params['id'], dto);
 
     res.status(200).json(update_result);
 })

@@ -17,7 +17,7 @@ export interface LabResponseDto {
     alias: string;
     current_level: LabLevel;
     exit_conditions: ExitConditionDto[];
-    assigned_users: AssignUserDto[];
+    assigned_users: AssignedUserDto[];
   }
   
   export interface CreateLabDto {
@@ -32,6 +32,11 @@ export interface LabResponseDto {
     discussion_url: string;
   }
   
+  export interface LevelUpdateDto {
+    level: number;
+    state: number;
+  }
+
   export interface AssignedUserDto{
       user_id: string;
       role_codes: [string];

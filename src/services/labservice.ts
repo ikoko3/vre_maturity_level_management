@@ -4,7 +4,7 @@ import { LevelConfiguration} from '../models/condition_configuration';
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { ConditionCategory, ConditionType, ConditionStatus} from '../const/condition.const';
 import {v4 as uuidv4} from 'uuid';
-import { CreateLabDto, LabResponseDto, ConditionUpdateDto, AssignedUserDto } from '../dtos/lab.dto'
+import { CreateLabDto, LabResponseDto, ConditionUpdateDto, AssignedUserDto, LevelUpdateDto } from '../dtos/lab.dto'
 
 export const labService = {
 
@@ -25,7 +25,7 @@ export const labService = {
         current_level: LabLevel.Zero,
         levels: [{
             level: LabLevel.Zero,
-            state: LabLevelState.InProgress,
+            state: LabLevelState.InDevelopment,
             reached_at: new Date(),
             exit_conditions: exit_conditions
         }]
@@ -61,6 +61,7 @@ export const labService = {
       id : lab._id,
       alias: lab.alias,
       current_level: current_level.level,
+      level_state: current_level.state,
       name: lab.name,
       assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_codes: au.role_codes, assigned_at: au.assigned_at, name: au.name, email: au.email, reference_id: au.reference_id})),
       exit_conditions: current_level.exit_conditions.map(ec => ({
@@ -103,6 +104,27 @@ export const labService = {
     }catch(e){
       return {ok: 'den se agapo'};
     }
+  }, updateLevelState: async (lab_id:string, dto: LevelUpdateDto) => {
+    
+    try{
+
+      const lab = await Lab.findById(lab_id);
+      if (!lab) 
+        return Error('Not found');
+
+      let level_to_update = lab.levels.find(l => l.level == dto.level);
+      if (!level_to_update){
+          return {error: 'Lab Level not found'}
+      }
+
+      level_to_update.state = dto.state;
+
+      await lab?.save();
+
+      return lab;
+    }catch(e){
+      return {ok: 'den se agapo'};
+    }
   },updateUsers: async (lab_id: string, dto: AssignedUserDto[]) => {
   try {
     const lab = await Lab.findById(lab_id);
@@ -113,7 +135,7 @@ export const labService = {
       const incomingRoles = Array.from(new Set(d.role_codes || []));
 
       // Try to find existing user
-      const existingUser = lab.assigned_users.find(u => u.user_id === d.user_id);
+      const existingUser = lab.assigned_users.find(u => u.user_id.toString() === d.user_id);
 
       if (existingUser) {
         // Merge unique role codes

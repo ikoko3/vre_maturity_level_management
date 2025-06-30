@@ -22,8 +22,13 @@ const doc = {
           $parent_lab_id: "",
         },
         conditionUpdateSchema:{
-          $is_fullfilled: true,
-          $comments: ''
+          $status: 100,
+          $comments: '',
+          $discussion_url: 'http://google.com',
+        },
+        levelStatusUpdateSchema:{
+          $level: 0,
+          $state: 200,
         },
         roleSchema: {
           $code: "VLD",
