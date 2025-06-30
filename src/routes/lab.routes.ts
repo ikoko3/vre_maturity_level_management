@@ -58,8 +58,23 @@ router.get('/:id', authenticate, async (req, res) => {
         return;
     }
 
-    res.status(200).json(await labService.currentExitConditions(lab));
+    res.status(200).json(labService.currentExitConditions(lab));
 })
+
+router.get('/by-user/:userId', async (req, res) => {
+    /*  #swagger.parameters['roleCode'] = {
+        in: 'query',
+        description: 'The ObjectId of the user to fetch labs for',
+        required: true,
+        type: 'string'
+    }
+*/
+
+    let labs = await labService.getLabsBasedOnRole(req.params['userId'], req.query['roleCode'] as string);
+
+    res.status(200).json(labs);
+})
+
 
 router.get('/by-alias/:alias', async (req, res) => {
     let lab = await Lab.findOne({alias: req.params['alias']}).lean();
@@ -68,7 +83,7 @@ router.get('/by-alias/:alias', async (req, res) => {
         return;
     }
 
-    res.status(200).json(await labService.currentExitConditions(lab));
+    res.status(200).json(labService.currentExitConditions(lab));
 })
 
 

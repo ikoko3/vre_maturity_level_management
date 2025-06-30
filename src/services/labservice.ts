@@ -79,33 +79,20 @@ export const labService = {
     );
     await config_l1.save();
 
-  },
-  currentExitConditions: async (lab: ILab) => {
-    let current_level = getMostRecentLevel(lab);
+  },currentExitConditions: (data: ILab) => currentExitConditions(data)
+  ,getLabsBasedOnRole: async (user_id:string, role: string) => {
+      const labs = await Lab.find({
+        assigned_users: {
+          $elemMatch: {
+            user_id: user_id,
+            role_codes: role,
+          }
+        }
+      }).lean();
 
-    let lab_dto : LabResponseDto = 
-    {
-      id : lab._id,
-      alias: lab.alias,
-      current_level: current_level?.level,
-      level_state: current_level.state,
-      name: lab.name,
-      assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_codes: au.role_codes, assigned_at: au.assigned_at, name: au.name, email: au.email, reference_id: au.reference_id})),
-      exit_conditions: current_level.exit_conditions.map(ec => ({
-        id: ec._id,
-        status: ec.status,
-        discussion_url: ec.discussion_url,
-        type: ec.type,
-        category: ec.category,
-        comments: ec.comments,
-        tooltip_url: ec.tooltip_url,
-      })),
-    };
-  
-    return lab_dto;
+      return labs.map(currentExitConditions);
   },
   updateExitCondition: async (lab_id:string, condition_id:string ,dto: ConditionUpdateDto) => {
-    
     try{
 
       const lab = await Lab.findById(lab_id);
@@ -212,6 +199,31 @@ export const labService = {
 
 function getMostRecentLevel(lab: ILab): ILab["levels"][0] {
   return [...lab.levels].sort((a, b) => new Date(b.reached_at).getTime() - new Date(a.reached_at).getTime())[0];
+}
+
+export function currentExitConditions(lab: ILab): LabResponseDto {
+    let current_level = getMostRecentLevel(lab);
+
+    let lab_dto : LabResponseDto = 
+    {
+      id : lab._id,
+      alias: lab.alias,
+      current_level: current_level?.level,
+      level_state: current_level.state,
+      name: lab.name,
+      assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_codes: au.role_codes, assigned_at: au.assigned_at, name: au.name, email: au.email, reference_id: au.reference_id})),
+      exit_conditions: current_level.exit_conditions.map(ec => ({
+        id: ec._id,
+        status: ec.status,
+        discussion_url: ec.discussion_url,
+        type: ec.type,
+        category: ec.category,
+        comments: ec.comments,
+        tooltip_url: ec.tooltip_url,
+      })),
+    };
+  
+    return lab_dto;
 }
 
 async function progressLevel(lab_id:string ) {

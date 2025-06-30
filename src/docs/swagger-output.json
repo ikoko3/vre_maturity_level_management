@@ -90,6 +90,35 @@
         }
       }
     },
+    "/lab/by-user/{userId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "roleCode",
+            "in": "query",
+            "description": "The ObjectId of the user to fetch labs for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/lab/by-alias/{alias}": {
       "get": {
         "description": "",
@@ -213,6 +242,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         },
         "requestBody": {
@@ -220,7 +252,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/conditionUpdateSchema"
+                "$ref": "#/components/schemas/levelStatusUpdateSchema"
               }
             }
           }
