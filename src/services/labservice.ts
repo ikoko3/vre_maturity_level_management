@@ -81,13 +81,13 @@ export const labService = {
 
   },
   currentExitConditions: async (lab: ILab) => {
-    let current_level = lab.levels.sort((a, b) => b.reached_at.getTime() - a.reached_at.getTime())[0] ?? null;
+    let current_level = getMostRecentLevel(lab);
 
     let lab_dto : LabResponseDto = 
     {
       id : lab._id,
       alias: lab.alias,
-      current_level: current_level.level,
+      current_level: current_level?.level,
       level_state: current_level.state,
       name: lab.name,
       assigned_users: lab.assigned_users.map(au => ({user_id: au.user_id, role_codes: au.role_codes, assigned_at: au.assigned_at, name: au.name, email: au.email, reference_id: au.reference_id})),
@@ -112,7 +112,7 @@ export const labService = {
       if (!lab) 
         return Error('Not found');
 
-      let current_level = lab.levels.sort((a, b) => b.reached_at.getTime() - a.reached_at.getTime())[0] ?? null;
+      let current_level = getMostRecentLevel(lab);
       let condition = current_level?.exit_conditions.find(ec => ec._id == condition_id);
       if (!condition)
         return Error('Not found');
@@ -208,13 +208,19 @@ export const labService = {
 
 };
 
+
+
+function getMostRecentLevel(lab: ILab): ILab["levels"][0] {
+  return [...lab.levels].sort((a, b) => new Date(b.reached_at).getTime() - new Date(a.reached_at).getTime())[0];
+}
+
 async function progressLevel(lab_id:string ) {
     try{
       const lab = await Lab.findById(lab_id);
       if (!lab) 
         return Error('Not found');
 
-      let current_level = lab.levels.sort((a, b) => a.reached_at.getTime() - b.reached_at.getTime())[0] ?? null;
+      let current_level = getMostRecentLevel(lab);
       if (current_level.level == LabLevel.Four)
           return;
 
@@ -245,6 +251,7 @@ async function progressLevel(lab_id:string ) {
               tooltip_url: string;
             }],
         });
+        lab.current_level = next_level;
 
         lab.save();
     }catch(e){
