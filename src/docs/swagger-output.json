@@ -292,7 +292,7 @@
         }
       }
     },
-    "/request/propose-lab": {
+    "/request/labs/create": {
       "post": {
         "description": "",
         "responses": {
@@ -308,6 +308,66 @@
                 "$ref": "#/components/schemas/labProposalSchema"
               }
             }
+          }
+        }
+      }
+    },
+    "/request/labs/{id}/update": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/labProposalUpdateSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request/labs/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/request/labs": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -723,6 +783,28 @@
           "timeplan",
           "associated_users",
           "lab_reference"
+        ]
+      },
+      "labProposalUpdateSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "number",
+            "example": 10
+          },
+          "reviewer_user_id": {
+            "type": "number",
+            "example": 12345
+          },
+          "comments": {
+            "type": "string",
+            "example": "test"
+          }
+        },
+        "required": [
+          "status",
+          "reviewer_user_id",
+          "comments"
         ]
       }
     }

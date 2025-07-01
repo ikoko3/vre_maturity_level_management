@@ -12,6 +12,7 @@ export interface ILabCreationRequest extends Document {
   lab_reference: {lab_id: string, lab_level: LabLevel};
 
   status: RequestStatus; 
+  comments: string;
   reviewer_user_id: string; 
 }
 
@@ -35,6 +36,7 @@ const LabCreationRequestSchema: Schema = new Schema({
   lab_reference: LabReferenceSchema,
 
   status: {type:Number, required: true},
+  comments: {type:String},
   reviewer_user_id: {type: Schema.Types.ObjectId, ref: 'User'},
 });
 

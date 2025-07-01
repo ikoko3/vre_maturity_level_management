@@ -57,6 +57,11 @@ const doc = {
           $associated_users: [{'user_id':'12345', 'role_codes':['GLU']}],
           $lab_reference: {'lab_id':'12345', 'lab_level':0},
         },
+        labProposalUpdateSchema: {
+          $status: 10,
+          $reviewer_user_id: "6860f128e861dfc672bcb368",
+          $comments: 'test',
+        }
     }
 } 
 };

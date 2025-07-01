@@ -15,3 +15,9 @@ export interface LabCreationDto{
   reviewer_user_id: string; 
 }
 
+
+export interface LabRequestUpdateDto{
+  status: RequestStatus; 
+  comments: string;
+  reviewer_user_id: string; 
+}
