@@ -21,7 +21,16 @@ export const userService = {
       return roles;
   },
   getUsers: async () => {
-      const users = (await User.find().lean());
+      const users = (await User.find().lean()).map(
+        u => 
+        ({
+          id: u._id,
+          reference_id: u.reference_id,
+          email: u.email,
+          name: u.name,
+          global_roles: u.global_roles,
+        })
+      );
 
       return users;
   },

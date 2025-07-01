@@ -292,6 +292,26 @@
         }
       }
     },
+    "/request/propose-lab": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/labProposalSchema"
+              }
+            }
+          }
+        }
+      }
+    },
     "/role": {
       "post": {
         "description": "",
@@ -416,7 +436,7 @@
         }
       }
     },
-    "/api/task-definitions/": {
+    "/task-definitions/": {
       "post": {
         "description": "",
         "responses": {
@@ -466,7 +486,7 @@
         }
       }
     },
-    "/api/task-definitions/{id}": {
+    "/task-definitions/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -641,6 +661,69 @@
             "role_codes"
           ]
         }
+      },
+      "labProposalSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Dolphin watching Lab"
+          },
+          "alias": {
+            "type": "string",
+            "example": "DLPH-01"
+          },
+          "scope": {
+            "type": "string",
+            "example": "I need this lab for ..."
+          },
+          "timeplan": {
+            "type": "string",
+            "example": "It will be completed by the end of 2100"
+          },
+          "associated_users": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "string",
+                  "example": "12345"
+                },
+                "role_codes": {
+                  "type": "array",
+                  "example": [
+                    "GLU"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "lab_reference": {
+            "type": "object",
+            "properties": {
+              "lab_id": {
+                "type": "string",
+                "example": "12345"
+              },
+              "lab_level": {
+                "type": "number",
+                "example": 0
+              }
+            }
+          }
+        },
+        "required": [
+          "title",
+          "alias",
+          "scope",
+          "timeplan",
+          "associated_users",
+          "lab_reference"
+        ]
       }
     }
   }

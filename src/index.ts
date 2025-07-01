@@ -5,6 +5,7 @@ import session from 'express-session';
 import { keycloak, memoryStore } from './config/keycloak';
 import { config } from './config/config';
 import lab_router from './routes/lab.routes';
+import request_router from './routes/request.routes';
 import userRole_router from './routes/userRoles.routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerFile from './docs/swagger-output.json';
@@ -31,16 +32,11 @@ app.use(keycloak.middleware());
 
 app.use(express.json());
 app.use('/lab', lab_router);
+app.use('/request', request_router);
 app.use(userRole_router);
 
-
-
-app.use('/api/task-definitions', taskDefinitionRoutes);
+app.use('/task-definitions', taskDefinitionRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
-
-// app.get('/admin', keycloak.protect('realm:admin'), (req, res) => {
-//   res.send('Admin only');
-// });
 
 
 mongoose.connect(config.mongoUri)

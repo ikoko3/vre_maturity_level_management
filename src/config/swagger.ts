@@ -48,7 +48,15 @@ const doc = {
         labRoleSchema: [{
           $user_id: "68417f10dbbf0245911c648c",
           $role_codes: "[VLD]",
-        }]
+        }],
+        labProposalSchema: {
+          $title: "Dolphin watching Lab",
+          $alias: "DLPH-01",
+          $scope: "I need this lab for ...",
+          $timeplan: "It will be completed by the end of 2100",
+          $associated_users: [{'user_id':'12345', 'role_codes':['GLU']}],
+          $lab_reference: {'lab_id':'12345', 'lab_level':0},
+        },
     }
 } 
 };

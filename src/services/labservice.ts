@@ -116,7 +116,7 @@ export const labService = {
       return condition;
 
     }catch(e){
-      return {ok: 'den se agapo'};
+      return Error(`Error ${e}`);
     }
   }, updateLevelState: async (lab_id:string, dto: LevelUpdateDto) => {
     
@@ -143,7 +143,7 @@ export const labService = {
 
       return lab;
     }catch(e){
-      return {ok: 'den se agapo'};
+      return Error(`Error ${e}`);
     }
   },updateUsers: async (lab_id: string, dto: AssignedUserDto[]) => {
   try {
@@ -189,7 +189,7 @@ export const labService = {
 
   } catch (e) {
     console.error('Error updating lab users:', e);
-    return { ok: 'den se agapo' };
+    return Error(`Error ${e}`);
   }
 }
 
@@ -267,6 +267,6 @@ async function progressLevel(lab_id:string ) {
 
         lab.save();
     }catch(e){
-      return {ok: 'den se agapo'};
+      return Error(`Error ${e}`);
     }
   };
