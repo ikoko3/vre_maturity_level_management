@@ -44,3 +44,8 @@ export interface LabResponseDto {
       name: string;
       reference_id: string;
   }
+
+    export interface UsersToAssignDto{
+      role_codes: [string];
+      user_id: string;
+  }

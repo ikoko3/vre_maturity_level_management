@@ -66,7 +66,7 @@ router.post('/labs/create', async (req, res) => {
         }
 
         //Add also the associated users
-        //labService.updateUsers(lab_creation._id, [{user_id:}]);
+        //labService.updateUsers(lab_creation.id, lab_request.associated_users.map(u => {u.user_id, u.role_codes)));
     }
   
     res.status(201).json(lab);

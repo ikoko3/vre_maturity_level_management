@@ -2,7 +2,8 @@ import {Lab, ILab } from '../models/lab.model';
 import { LevelConfiguration} from '../models/condition_configuration';
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { ConditionCategory, ConditionType, ConditionStatus} from '../const/condition.const';
-import { CreateLabDto, LabResponseDto, ConditionUpdateDto, AssignedUserDto, LevelUpdateDto } from '../dtos/lab.dto'
+import { CreateLabDto, LabResponseDto, ConditionUpdateDto, UsersToAssignDto, LevelUpdateDto } from '../dtos/lab.dto'
+import { User } from '../models/user.model';
 
 export const labService = {
 
@@ -145,7 +146,7 @@ export const labService = {
     }catch(e){
       return Error(`Error ${e}`);
     }
-  },updateUsers: async (lab_id: string, dto: AssignedUserDto[]) => {
+  },updateUsers: async (lab_id: string, dto: UsersToAssignDto[]) => {
   try {
     const lab = await Lab.findById(lab_id);
     if (!lab) return new Error('Not found');
@@ -165,21 +166,24 @@ export const labService = {
         ]);
         existingUser.role_codes = Array.from(roleSet);
 
-        // Optional: ensure name and email are updated if needed
-        existingUser.name = d.name;
-        existingUser.email = d.email;
 
         // Let Mongoose know this array has changed
         lab.markModified('assigned_users');
       } else {
+        let user = await User.findById(d.user_id);
+        if (!user) {
+          console.error(`User with ID ${d.user_id} not found`);
+          continue; // Skip this user if not found
+        }
+
         // Add new user entry
         lab.assigned_users.push({
           user_id: d.user_id,
-          name: d.name,
-          email: d.email,
+          name: user.name,
+          email: user.email,
           role_codes: incomingRoles,
           assigned_at: new Date(),
-          reference_id: d.reference_id,
+          reference_id: user.reference_id,
         });
       }
     }

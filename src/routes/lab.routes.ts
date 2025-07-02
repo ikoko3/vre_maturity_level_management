@@ -2,8 +2,9 @@ import express from 'express';
 import {Lab} from '../models/lab.model'
 import { LabLevel, LabLevelState } from '../const/lab.const';
 import { labService } from '../services/labservice';
-import { AssignedUserDto, ConditionUpdateDto, CreateLabDto, LabResponseDto, LevelUpdateDto } from '../dtos/lab.dto';
+import { UsersToAssignDto, ConditionUpdateDto, CreateLabDto, LabResponseDto, LevelUpdateDto } from '../dtos/lab.dto';
 import { authenticate } from '../middleware/authMiddleware';
+import { error } from 'console';
 
 
 
@@ -162,8 +163,12 @@ router.post('/:id/assign-users', async (req, res) => {
         } 
     */
    try{
-        const dto: AssignedUserDto[] = req.body;
+        const dto: UsersToAssignDto[] = req.body;
         let update_result = await labService.updateUsers(req.params['id'], dto );
+        if (!update_result){
+        res.status(500).json({ error: update_result });
+        return;
+    }
         
         res.status(200).json(update_result);
     } catch (e: unknown) {
