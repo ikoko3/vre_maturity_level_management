@@ -16,12 +16,11 @@ import taskDefinitionRoutes from './auto_assess/routes/taskDefinition.routes';
 
 
 const app = express();
-const PORT = 3000;
 
 app.use(cors());
 app.use(
   session({
-    secret: 'some-secret',
+    secret: config.sessionSecret,
     resave: false,
     saveUninitialized: true,
     store: memoryStore,

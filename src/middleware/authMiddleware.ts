@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { jwtVerify, createRemoteJWKSet } from 'jose';
+import { config } from '../config/config';
 
-const jwks = createRemoteJWKSet(
-  new URL('http://localhost:8080/realms/vre/protocol/openid-connect/certs')
-);
+const jwks = createRemoteJWKSet(new URL(config.jwt.jwksUri));
 
 export async function authenticate(req: Request, res: Response, next: NextFunction): Promise<void> {
   const authHeader = req.headers.authorization;
@@ -17,14 +16,15 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
 
   try {
     const { payload } = await jwtVerify(token, jwks, {
-      issuer: 'http://localhost:8080/realms/vre',
-      audience: 'nextjs-frontend',
+      issuer: config.jwt.issuer,
+      audience: config.jwt.audience,
     });
 
     // Attach user info for later use
     (req as any).user = payload;
 
-    const roles = (req as any).user?.resource_access?.['nextjs-frontend']?.roles || [];
+    const roles =
+      (req as any).user?.resource_access?.[config.jwt.audience]?.roles || [];
     if (roles.includes('coordinator')) {
     // show or allow coordinator actions
     }

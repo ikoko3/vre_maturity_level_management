@@ -1,4 +1,5 @@
 import swaggerAutogen from 'swagger-autogen';
+import { config } from './config';
 
 const doc = {
   info: {
@@ -6,7 +7,7 @@ const doc = {
     description: 'API documentation with swagger-autogen',
     version: '1.0.0',
   },
-  host: 'localhost:3000',
+  host: config.swaggerHost,
   schemes: ['http'],
   tags: [
     {
