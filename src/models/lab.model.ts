@@ -5,7 +5,10 @@ import { ConditionType } from '../const/condition.const';
 export interface ILab extends Document {
   name: string;
   alias: string;
-  parent_lab_id: string;
+  parent_lab: {
+    id: string,
+    level: LabLevel
+  };
   current_level: LabLevel;
   levels: [{
     level: LabLevel,
@@ -34,6 +37,11 @@ const ConditionSchema: Schema = new Schema({
   comments: {type: String},
   tooltip_url: {type: String},
   discussion_url: {type: String},
+});
+
+const ParentLabSchema: Schema = new Schema({
+  id: { type: Schema.Types.ObjectId, ref: 'Lab', required: true },
+  level: { type: Number, required: true }
 });
 
 //TODO: Figure out how to fix the validation errors
@@ -67,7 +75,7 @@ const AssignedUserSchema = new Schema({
 const LabSchema: Schema = new Schema({
   name: { type: String, required: true },
   alias: {type: String, required: true, unique: true},
-  parent_lab_id: { type: String },
+  parent_lab: ParentLabSchema,
   current_level : { type: Number, required: true},
   levels: [LevelSchema],
   assigned_users: [AssignedUserSchema],

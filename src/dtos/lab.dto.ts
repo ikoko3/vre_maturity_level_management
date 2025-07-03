@@ -24,6 +24,7 @@ export interface LabResponseDto {
     name: string;
     alias: string;
     parent_lab_id: string;
+    parent_lab_level: LabLevel;
   }
 
   export interface ConditionUpdateDto {
@@ -46,6 +47,6 @@ export interface LabResponseDto {
   }
 
     export interface UsersToAssignDto{
-      role_codes: [string];
+      role_codes: string[];
       user_id: string;
   }

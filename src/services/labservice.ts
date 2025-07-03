@@ -4,34 +4,43 @@ import { LabLevel, LabLevelState } from '../const/lab.const';
 import { ConditionCategory, ConditionType, ConditionStatus} from '../const/condition.const';
 import { CreateLabDto, LabResponseDto, ConditionUpdateDto, UsersToAssignDto, LevelUpdateDto } from '../dtos/lab.dto'
 import { User } from '../models/user.model';
+import { get } from 'http';
 
 export const labService = {
 
-  registerLab: async (data: CreateLabDto) => {
-    let levelConfiguration = await LevelConfiguration.findOne({ level: LabLevel.Zero }).lean();
-    const exit_conditions = levelConfiguration?.exit_conditions.map(ec => ({
-        type: ec.type, 
-        status: ConditionStatus.Unknown,
-        category: ec.category,
-        tooltip_url: ec.tooltip_url,
-      }));
 
-    let lab = new Lab({
-        name: data.name,
-        parent_lab_id: data.parent_lab_id,
-        alias: data.alias,
-        current_level: LabLevel.Zero,
-        levels: [{
-            level: LabLevel.Zero,
-            state: LabLevelState.InDevelopment,
-            reached_at: new Date(),
-            exit_conditions: exit_conditions
-        }]
-    });
+    registerLab: async (data: CreateLabDto) => {
+        try{
+          let levelConfiguration = await LevelConfiguration.findOne({ level: LabLevel.Zero }).lean();
+          const exit_conditions = levelConfiguration?.exit_conditions.map(ec => ({
+              type: ec.type, 
+              status: ConditionStatus.Unknown,
+              category: ec.category,
+              tooltip_url: ec.tooltip_url,
+            }));
 
-    await lab.save();
+          let lab = new Lab({
+              name: data.name,
+              parent_lab: {
+                id: data.parent_lab_id,
+                level: data.parent_lab_level},
+              alias: data.alias,
+              current_level: LabLevel.Zero,
+              levels: [{
+                  level: LabLevel.Zero,
+                  state: LabLevelState.InDevelopment,
+                  reached_at: new Date(),
+                  exit_conditions: exit_conditions
+              }]
+          });
 
-    return lab;
+          await lab.save();
+
+          return lab;
+        }catch(e){
+          console.error(`Error registering lab: ${e}`);
+          return Error(`Error registering lab: ${e}`);
+        }
   },
   //This is hardcoded to test faster, at a later phase it can be removed and maintained only via the db
   registerConfiguration: async (data: any) => {
@@ -195,6 +204,44 @@ export const labService = {
     console.error('Error updating lab users:', e);
     return Error(`Error ${e}`);
   }
+}, getLabDependenciesGraph: async () => {
+     // const labs = (await Lab.find({}, 'name description current_level alias').lean()).map(lab => ({
+    const labs = await Lab.find({}, 'alias id levels parent_lab').lean();
+
+    const nodes = [];
+    const edges = [];
+
+    for (const lab of labs) {
+
+      for (const level of lab.levels) {
+            nodes.push({
+                id: `${lab._id}-${level.level}`,
+                label: `${lab.alias} L${level.level}`,
+                level: level.level,
+            });
+
+            if (level.level != LabLevel.Zero) {
+                edges.push({
+                    from: `${lab._id}-${level.level - 1}`,
+                    to: `${lab._id}-${level.level}`
+                });
+            }
+        }
+
+        if (lab.parent_lab && lab.parent_lab.id) {
+            edges.push({
+                from: `${lab.parent_lab.id}-${lab.parent_lab.level}`,
+                to: `${lab._id}-${LabLevel.Zero}`
+            });
+        }
+    }
+
+    const graph = {
+        nodes: nodes,
+        edges: edges  
+    };
+
+    return graph;
 }
 
 };

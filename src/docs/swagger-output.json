@@ -119,6 +119,16 @@
         }
       }
     },
+    "/lab/dependencies/graph": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/lab/by-alias/{alias}": {
       "get": {
         "description": "",

@@ -53,10 +53,11 @@ router.post('/labs/create', async (req, res) => {
     if (dto.status == RequestStatus.Approved){
         var lab_request = lab as ILabCreationRequest;
        
-        var lab_creation = labService.registerLab({
+        var lab_creation = await labService.registerLab({
                 name: lab_request.title,
                 alias: lab_request.alias,
-                parent_lab_id: '',
+                parent_lab_id: lab_request.lab_reference?.lab_id,
+                parent_lab_level: lab_request.lab_reference?.lab_level,
             });
 
         if (!lab_creation)
@@ -65,8 +66,11 @@ router.post('/labs/create', async (req, res) => {
             return;
         }
 
-        //Add also the associated users
-        //labService.updateUsers(lab_creation.id, lab_request.associated_users.map(u => {u.user_id, u.role_codes)));
+        let user_res = await labService.updateUsers(lab_creation.id, lab_request.associated_users);
+        if (user_res instanceof Error){
+            res.status(500).json({error: user_res.message});
+            return;
+        }
     }
   
     res.status(201).json(lab);

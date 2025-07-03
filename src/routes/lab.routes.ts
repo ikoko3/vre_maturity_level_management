@@ -76,6 +76,14 @@ router.get('/by-user/:userId', async (req, res) => {
     res.status(200).json(labs);
 })
 
+router.get('/dependencies/graph', async (req, res) => {
+
+
+    let labs = await labService.getLabDependenciesGraph();
+
+    res.status(200).json(labs);
+})
+
 
 router.get('/by-alias/:alias', async (req, res) => {
     let lab = await Lab.findOne({alias: req.params['alias']}).lean();

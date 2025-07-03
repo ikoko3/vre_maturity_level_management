@@ -23,7 +23,7 @@ const AssociatedUsersSchema = new Schema({
 
 const LabReferenceSchema = new Schema({
   lab_id: { type: Schema.Types.ObjectId, ref: 'Lab' },
-  lab_level: [{ type: String }],
+  lab_level: { type: Number },
 });
 
 const LabCreationRequestSchema: Schema = new Schema({
