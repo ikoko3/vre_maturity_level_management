@@ -77,6 +77,28 @@ router.get('/users', async (req, res) => {
     }
 })
 
+router.get('/user/:id', async (req, res) => {
+    try {
+        var user = await userService.getUser(req.params["id"]);
+
+        res.status(200).json(user);
+    }catch (e: unknown){
+        const error = e instanceof Error ? e : new Error(String(e));
+        res.status(500).json({ error: error.message, stack: error.stack });
+    }
+})
+
+router.get('/user-by-reference/:id', async (req, res) => {
+    try {
+        var user = await userService.getUserByReference(req.params["id"]);
+
+        res.status(200).json(user);
+    }catch (e: unknown){
+        const error = e instanceof Error ? e : new Error(String(e));
+        res.status(500).json({ error: error.message, stack: error.stack });
+    }
+})
+
 
 router.post('/users/:id/roles', async (req, res) => {
 /*  #swagger.requestBody = {

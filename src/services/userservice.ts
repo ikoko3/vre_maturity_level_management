@@ -34,6 +34,30 @@ export const userService = {
 
       return users;
   },
+    getUser: async (id: string) => {
+      const user = await User.findById(id).lean();
+      if (!user) throw new Error('User not found');
+
+      return {
+          id: user._id,
+          reference_id: user.reference_id,
+          email: user.email,
+          name: user.name,
+          global_roles: user.global_roles,
+        };
+  },
+   getUserByReference: async (reference: string) => {
+      const user = await User.findOne({reference_id : reference}).lean();
+      if (!user) throw new Error('User not found');
+
+      return {
+          id: user._id,
+          reference_id: user.reference_id,
+          email: user.email,
+          name: user.name,
+          global_roles: user.global_roles,
+        };
+  },
    addUser: async (data: UserDto) => {
     const user = new User({
       reference_id: data.reference_id,

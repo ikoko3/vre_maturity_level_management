@@ -7,7 +7,8 @@ const doc = {
     description: 'API documentation with swagger-autogen',
     version: '1.0.0',
   },
-  host: config.swaggerHost,
+  //host: config.swaggerHost, //Figure out why this does not work
+  host: 'localhost:3000',
   schemes: ['http'],
   tags: [
     {
