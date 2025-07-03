@@ -206,7 +206,7 @@ export const labService = {
   }
 }, getLabDependenciesGraph: async () => {
      // const labs = (await Lab.find({}, 'name description current_level alias').lean()).map(lab => ({
-    const labs = await Lab.find({}, 'alias id levels parent_lab').lean();
+    const labs = await Lab.find({}, 'alias name id levels parent_lab').lean();
 
     const nodes = [];
     const edges = [];
@@ -218,6 +218,8 @@ export const labService = {
                 id: `${lab._id}-${level.level}`,
                 label: `${lab.alias} L${level.level}`,
                 level: level.level,
+                labId: lab._id,
+                labName: lab.name,
             });
 
             if (level.level != LabLevel.Zero) {
