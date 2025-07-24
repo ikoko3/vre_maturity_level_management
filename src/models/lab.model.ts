@@ -40,8 +40,8 @@ const ConditionSchema: Schema = new Schema({
 });
 
 const ParentLabSchema: Schema = new Schema({
-  id: { type: Schema.Types.ObjectId, ref: 'Lab', required: true },
-  level: { type: Number, required: true }
+  id: { type: Schema.Types.ObjectId, ref: 'Lab', required: false },
+  level: { type: Number, required: false }
 });
 
 //TODO: Figure out how to fix the validation errors
