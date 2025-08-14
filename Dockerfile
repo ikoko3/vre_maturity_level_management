@@ -1,21 +1,18 @@
-# Use official Node.js image as base
+# POC: run TypeScript directly with tsx
 FROM node:20-alpine
-
-# Set working directory
 WORKDIR /app
 
-# Install dependencies
+# Install deps (uses lockfile if present)
 COPY package*.json tsconfig.json ./
-RUN npm install
+RUN npm ci
 
-# Copy the rest of the application code
+# Copy source
 COPY . .
 
-# Use docker-specific environment configuration
+# Optional, but fine: set your env
 ENV NODE_ENV=docker
 
-# Expose the port the app runs on
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "run", "start"]
+# Run via tsx so .ts works
+CMD ["npx", "tsx", "src/index.ts"]
