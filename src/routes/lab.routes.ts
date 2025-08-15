@@ -62,7 +62,7 @@ router.get('/:id', async (req, res) => {
     res.status(200).json(labService.currentExitConditions(lab));
 })
 
-router.get('/by-user/:userId', authenticate,async (req, res) => {
+router.get('/by-user/:userId', async (req, res) => {
     /*  #swagger.parameters['roleCode'] = {
         in: 'query',
         description: 'The ObjectId of the user to fetch labs for',
@@ -96,7 +96,7 @@ router.get('/by-alias/:alias', async (req, res) => {
 })
 
 
-router.get('/detailed/:id', authenticate, async (req, res) => {
+router.get('/detailed/:id',  async (req, res) => {
     let lab = await Lab.findById(req.params['id']).lean();
     if (!lab){
         res.status(404).json({ message: "Lab not found" });
@@ -117,7 +117,7 @@ router.get('/detailed/by-alias/:alias', async (req, res) => {
     res.status(200).json(lab);
 })
 
-router.post('/:id/exit_condition/:exit_condition_id/update', authenticate, async (req, res) => {
+router.post('/:id/exit_condition/:exit_condition_id/update',  async (req, res) => {
     /*  #swagger.requestBody = {
             required: true,
             content: {
@@ -135,7 +135,7 @@ router.post('/:id/exit_condition/:exit_condition_id/update', authenticate, async
     res.status(200).json(update_result);
 })
 
-router.post('/:id/update_level', authenticate, async (req, res) => {
+router.post('/:id/update_level',  async (req, res) => {
     /*  #swagger.requestBody = {
             required: true,
             content: {
@@ -158,7 +158,7 @@ router.post('/:id/update_level', authenticate, async (req, res) => {
 })
 
 
-router.post('/:id/assign-users', authenticate, async (req, res) => {
+router.post('/:id/assign-users',  async (req, res) => {
     /*  #swagger.requestBody = {
             required: true,
             content: {
