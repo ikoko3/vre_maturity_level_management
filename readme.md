@@ -22,3 +22,22 @@ JWT_AUDIENCE=nextjs-frontend
 ```
 
 Adjust the values as needed for your environment.
+
+## Docker
+
+This project includes a `Dockerfile` so the service can run inside a container
+or locally on your machine.
+
+* Running locally uses the settings from `configuration/.env.development`.
+* The Docker image sets `NODE_ENV=docker` and therefore loads
+  `configuration/.env.docker`, which points to Docker&nbsp;Compose service URLs
+  instead of localhost.
+
+To build and run the container:
+
+```bash
+docker build -t vre-levels .
+docker run --env-file configuration/.env.docker -p 3000:3000 vre-levels
+```
+
+Adjust the compose service names in `.env.docker` if your setup differs.
