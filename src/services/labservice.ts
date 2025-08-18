@@ -90,15 +90,20 @@ export const labService = {
     await config_l1.save();
 
   },currentExitConditions: (data: ILab) => currentExitConditions(data)
-  ,getLabsBasedOnRole: async (user_id:string, role: string) => {
-      const labs = await Lab.find({
+  ,getLabsBasedOnRole: async (user_id:string, role?: string) => {
+      const filter: any = {
         assigned_users: {
           $elemMatch: {
             user_id: user_id,
-            role_codes: role,
           }
         }
-      }).lean();
+      };
+
+      if (role) {
+        filter.assigned_users.$elemMatch.role_codes = role;
+      }
+
+      const labs = await Lab.find(filter).lean();
 
       return labs.map(currentExitConditions);
   },

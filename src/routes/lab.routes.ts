@@ -65,13 +65,13 @@ router.get('/:id', async (req, res) => {
 router.get('/by-user/:userId', authenticate,async (req, res) => {
     /*  #swagger.parameters['roleCode'] = {
         in: 'query',
-        description: 'The ObjectId of the user to fetch labs for',
-        required: true,
+        description: 'Optional role code to filter labs. If omitted, all labs for the user are returned.',
+        required: false,
         type: 'string'
     }
 */
 
-    let labs = await labService.getLabsBasedOnRole(req.params['userId'], req.query['roleCode'] as string);
+    let labs = await labService.getLabsBasedOnRole(req.params['userId'], req.query['roleCode']?.toString());
 
     res.status(200).json(labs);
 })
